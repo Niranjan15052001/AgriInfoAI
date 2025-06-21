@@ -237,8 +237,8 @@ const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; 
                          <CardTitle className="text-lg font-headline">Additional Resources</CardTitle>
                        </div>
                         <Button asChild variant="ghost" size="sm">
-                            <a href={`https://www.google.com/search?q=how+to+grow+${result.commonName}`} target="_blank" rel="noopener noreferrer">
-                                Search Online
+                            <a href={`https://www.google.com/search?q=buy+${result.commonName}+seeds+or+plants`} target="_blank" rel="noopener noreferrer">
+                                Buy Seeds or Plants
                             </a>
                         </Button>
                     </CardHeader>
