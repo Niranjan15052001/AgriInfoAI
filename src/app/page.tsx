@@ -11,8 +11,61 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { identifyFruitVegetable, type IdentifyFruitVegetableOutput } from '@/ai/flows/identify-fruit-vegetable';
 import { Circle, Sprout, Leaf, UploadCloud, AlertCircle, ExternalLink, Bot } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type IdentificationResult = IdentifyFruitVegetableOutput['identification'];
+
+const translations = {
+  en: {
+    appTitle: 'AgriInfoAI',
+    pageTitle: 'Identify and Grow with AI',
+    pageDescription: 'Upload a picture of a fruit or vegetable, and our AI will tell you what it is and how to grow it.',
+    uploadTitle: 'Upload Image',
+    uploadDescription: 'Select an image of a fruit or vegetable to identify.',
+    uploadPrompt: 'Click to upload or drag and drop',
+    uploadHint: 'PNG, JPG, or WEBP',
+    identifyButton: 'Identify Produce',
+    identifyingButton: 'Identifying...',
+    errorTitle: 'Error',
+    errorSelectFile: 'Please select an image file.',
+    errorIdentify: 'Could not identify the item in the image. Please try a different one.',
+    errorGeneric: 'An error occurred during identification. Please try again.',
+    errorReadFile: 'Failed to read the image file.',
+    resultsIdentified: 'Identified Produce',
+    resultsGetSeeds: 'How to Get Seeds',
+    resultsConditions: 'Best Growing Conditions',
+    resultsProcess: 'How to Grow: Step-by-Step',
+    resultsResources: 'Additional Resources',
+    resultsBuySeeds: 'Buy Seeds or Plants',
+    footerText: 'Powered by AI. Grow smarter with AgriInfoAI.',
+    language: 'Language',
+  },
+  hi: {
+    appTitle: 'एग्रीइन्फोएआई',
+    pageTitle: 'एआई के साथ पहचानें और उगाएं',
+    pageDescription: 'एक फल या सब्जी की तस्वीर अपलोड करें, और हमारा एआई आपको बताएगा कि यह क्या है और इसे कैसे उगाना है।',
+    uploadTitle: 'छवि अपलोड करें',
+    uploadDescription: 'पहचानने के लिए किसी फल या सब्जी की छवि चुनें।',
+    uploadPrompt: 'अपलोड करने के लिए क्लिक करें या खींचें और छोड़ें',
+    uploadHint: 'पीएनजी, जेपीजी, या वेबपी',
+    identifyButton: 'उत्पाद की पहचान करें',
+    identifyingButton: 'पहचान हो रही है...',
+    errorTitle: 'त्रुटि',
+    errorSelectFile: 'कृपया एक छवि फ़ाइल चुनें।',
+    errorIdentify: 'छवि में आइटम की पहचान नहीं हो सकी। कृपया कोई दूसरा प्रयास करें।',
+    errorGeneric: 'पहचान के दौरान एक त्रुटि हुई। कृपया पुन: प्रयास करें।',
+    errorReadFile: 'छवि फ़ाइल को पढ़ने में विफल।',
+    resultsIdentified: 'पहचाना गया उत्पाद',
+    resultsGetSeeds: 'बीज कैसे प्राप्त करें',
+    resultsConditions: 'सर्वश्रेष्ठ बढ़ती स्थितियाँ',
+    resultsProcess: 'कैसे उगाएं: चरण-दर-चरण',
+    resultsResources: 'अतिरिक्त संसाधन',
+    resultsBuySeeds: 'बीज या पौधे खरीदें',
+    footerText: 'एआई द्वारा संचालित। एग्रीइन्फोएआई के साथ होशियारी से बढ़ें।',
+    language: 'भाषा',
+  },
+};
+
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -20,6 +73,9 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [language, setLanguage] = useState<'en' | 'hi'>('en');
+
+  const t = translations[language];
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -39,7 +95,7 @@ export default function Home() {
     const file = fileInputRef.current?.files?.[0];
 
     if (!file) {
-      setError('Please select an image file.');
+      setError(t.errorSelectFile);
       return;
     }
 
@@ -52,22 +108,22 @@ export default function Home() {
     reader.onload = async () => {
       try {
         const photoDataUri = reader.result as string;
-        const aiResult = await identifyFruitVegetable({ photoDataUri });
+        const aiResult = await identifyFruitVegetable({ photoDataUri, language });
         if (aiResult && aiResult.identification) {
           setResult(aiResult.identification);
         } else {
-            setError('Could not identify the item in the image. Please try a different one.');
+            setError(t.errorIdentify);
         }
       } catch (e) {
         console.error(e);
-        setError('An error occurred during identification. Please try again.');
+        setError(t.errorGeneric);
       } finally {
         setLoading(false);
       }
     };
     reader.onerror = () => {
       setLoading(false);
-      setError('Failed to read the image file.');
+      setError(t.errorReadFile);
     };
   };
 
@@ -78,28 +134,39 @@ export default function Home() {
           <div className="p-2 bg-primary rounded-lg">
             <Bot className="text-primary-foreground h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold font-headline text-foreground tracking-tight">AgriInfoAI</h1>
+          <h1 className="text-2xl font-bold font-headline text-foreground tracking-tight">{t.appTitle}</h1>
+          <div className="ml-auto">
+            <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'hi')}>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder={t.language} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="hi">हिन्दी</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </header>
 
       <main className="flex-grow container mx-auto p-4 md:p-8">
         <div className="grid gap-12">
           <section className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold font-headline mb-2">Identify and Grow with AI</h2>
+            <h2 className="text-3xl md:text-4xl font-bold font-headline mb-2">{t.pageTitle}</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Upload a picture of a fruit or vegetable, and our AI will tell you what it is and how to grow it.
+              {t.pageDescription}
             </p>
           </section>
 
           <Card className="max-w-2xl mx-auto w-full shadow-lg">
             <CardHeader>
-              <CardTitle>Upload Image</CardTitle>
-              <CardDescription>Select an image of a fruit or vegetable to identify.</CardDescription>
+              <CardTitle>{t.uploadTitle}</CardTitle>
+              <CardDescription>{t.uploadDescription}</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="image-upload" className="sr-only">Upload Image</Label>
+                  <Label htmlFor="image-upload" className="sr-only">{t.uploadTitle}</Label>
                   <div 
                     className="border-2 border-dashed border-muted/50 rounded-lg p-8 text-center cursor-pointer hover:bg-accent/10 transition-colors"
                     onClick={() => fileInputRef.current?.click()}
@@ -121,15 +188,15 @@ export default function Home() {
                     ) : (
                       <div className="flex flex-col items-center gap-2 text-muted-foreground">
                         <UploadCloud className="w-12 h-12 text-accent" />
-                        <span className="font-semibold">Click to upload or drag and drop</span>
-                        <span className="text-sm">PNG, JPG, or WEBP</span>
+                        <span className="font-semibold">{t.uploadPrompt}</span>
+                        <span className="text-sm">{t.uploadHint}</span>
                       </div>
                     )}
                   </div>
                 </div>
                 
                 <Button type="submit" className="w-full bg-accent hover:bg-accent/80 text-accent-foreground" disabled={loading || !previewUrl}>
-                  {loading ? 'Identifying...' : 'Identify Produce'}
+                  {loading ? t.identifyingButton : t.identifyButton}
                 </Button>
               </form>
             </CardContent>
@@ -138,19 +205,19 @@ export default function Home() {
           {error && (
             <Alert variant="destructive" className="max-w-4xl mx-auto w-full">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
+              <AlertTitle>{t.errorTitle}</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
           {loading && <ResultsSkeleton />}
           
-          {result && <ResultsDisplay result={result} previewUrl={previewUrl} />}
+          {result && <ResultsDisplay result={result} previewUrl={previewUrl} t={t} />}
 
         </div>
       </main>
       <footer className="text-center p-4 text-sm text-muted-foreground border-t">
-        <p>Powered by AI. Grow smarter with AgriInfoAI.</p>
+        <p>{t.footerText}</p>
       </footer>
     </div>
   );
@@ -178,13 +245,13 @@ const ResultsSkeleton = () => (
     </div>
 );
 
-const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; previewUrl: string | null }) => (
+const ResultsDisplay = ({ result, previewUrl, t }: { result: IdentificationResult; previewUrl: string | null; t: typeof translations['en'] }) => (
     <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto w-full">
         <div className="md:col-span-1">
             <Card className="shadow-lg sticky top-8">
                 <CardHeader>
                     <CardTitle className="text-2xl font-headline">{result.commonName}</CardTitle>
-                    <CardDescription>Identified Produce</CardDescription>
+                    <CardDescription>{t.resultsIdentified}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     {previewUrl && (
@@ -201,7 +268,7 @@ const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; 
                     <AccordionTrigger className="px-6 text-lg hover:no-underline font-headline">
                         <div className="flex items-center gap-3">
                             <Circle className="w-6 h-6 text-accent" />
-                            <span>How to Get Seeds</span>
+                            <span>{t.resultsGetSeeds}</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-6 text-base text-muted-foreground">
@@ -212,7 +279,7 @@ const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; 
                     <AccordionTrigger className="px-6 text-lg hover:no-underline font-headline">
                         <div className="flex items-center gap-3">
                             <Sprout className="w-6 h-6 text-accent" />
-                            <span>Best Growing Conditions</span>
+                            <span>{t.resultsConditions}</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-6 text-base text-muted-foreground">
@@ -223,7 +290,7 @@ const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; 
                     <AccordionTrigger className="px-6 text-lg hover:no-underline font-headline">
                         <div className="flex items-center gap-3">
                             <Leaf className="w-6 h-6 text-accent" />
-                            <span>How to Grow: Step-by-Step</span>
+                            <span>{t.resultsProcess}</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-6 text-base text-muted-foreground">
@@ -234,11 +301,11 @@ const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; 
                     <CardHeader className="flex flex-row items-center justify-between p-4">
                        <div className="flex items-center gap-3">
                          <ExternalLink className="w-6 h-6 text-accent" />
-                         <CardTitle className="text-lg font-headline">Additional Resources</CardTitle>
+                         <CardTitle className="text-lg font-headline">{t.resultsResources}</CardTitle>
                        </div>
                         <Button asChild variant="ghost" size="sm">
                             <a href={`https://www.google.com/search?q=buy+${result.commonName}+seeds+or+plants`} target="_blank" rel="noopener noreferrer">
-                                Buy Seeds or Plants
+                                {t.resultsBuySeeds}
                             </a>
                         </Button>
                     </CardHeader>

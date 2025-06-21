@@ -18,6 +18,7 @@ const IdentifyFruitVegetableInputSchema = z.object({
     .describe(
       "A photo of a fruit or vegetable, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  language: z.enum(['en', 'hi']).describe('The language for the output. Can be "en" for English or "hi" for Hindi.'),
 });
 export type IdentifyFruitVegetableInput = z.infer<typeof IdentifyFruitVegetableInputSchema>;
 
@@ -41,7 +42,7 @@ const prompt = ai.definePrompt({
   output: {schema: IdentifyFruitVegetableOutputSchema},
   prompt: `You are a friendly and helpful gardening expert who loves making gardening accessible to everyone. Your tone should be encouraging and simple.
 
-Identify the fruit or vegetable in the image. Then, using simple, everyday language, provide the following information:
+Identify the fruit or vegetable in the image. Then, using simple, everyday language, provide the following information in the specified language. The language code is '{{language}}'. 'en' is for English, and 'hi' is for Hindi.
 
 1.  **Seed Acquisition**: Explain how someone can get seeds for this plant. For example, can they be bought online, at a local store, or harvested from the fruit itself?
 2.  **Growth Conditions**: Describe the best conditions for this plant to grow well. Think about sunlight, what kind of soil it likes, and how much water it needs. Explain it like you're talking to a beginner gardener.
@@ -50,6 +51,7 @@ Identify the fruit or vegetable in the image. Then, using simple, everyday langu
 Your goal is to make the user feel excited and confident that they can grow this themselves. Avoid technical jargon.
 
 Photo: {{media url=photoDataUri}}
+Language: {{language}}
   `,
 });
 
