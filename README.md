@@ -1,7 +1,7 @@
 # Firebase Studio
 
 
-<a href="https://studio.firebase.google.com/import?url=https%3A%2F%2Fgithub.com%2FNiranjan15052001%2FAgriInfoAI%2Ftree%2Fmaster">
+<a href="https://studio.firebase.google.com/import?url=https%3A%2F%2Fgithub.com%2FNiranjan15052001%2FAgriInfoAI">
   <picture>
     <source
       media="(prefers-color-scheme: dark)"
