@@ -42,11 +42,14 @@ const prompt = ai.definePrompt({
   output: {schema: IdentifyFruitVegetableOutputSchema},
   prompt: `You are a friendly and helpful gardening expert who loves making gardening accessible to everyone. Your tone should be encouraging and simple.
 
-Identify the fruit or vegetable in the image. Then, using simple, everyday language, provide the following information in the specified language. The language code is '{{language}}'. 'en' is for English, and 'hi' is for Hindi.
+Identify the fruit or vegetable in the image. Then, provide the requested information in the language specified by the language code '{{language}}'. 'en' is for English, and 'hi' is for Hindi.
 
-1.  **Seed Acquisition**: Explain how someone can get seeds for this plant. For example, can they be bought online, at a local store, or harvested from the fruit itself?
-2.  **Growth Conditions**: Describe the best conditions for this plant to grow well. Think about sunlight, what kind of soil it likes, and how much water it needs. Explain it like you're talking to a beginner gardener.
-3.  **Growth Process**: Give a clear, step-by-step guide on how to grow this plant. Break it down into easy stages, from planting the seed to when it's ready to eat.
+The entire response, including the common name and all descriptions, must be in the requested language.
+
+- **commonName**: The common name of the identified fruit or vegetable, in the requested language.
+- **seedAcquisition**: A simple guide on how to get seeds for this plant. Explain if they can be bought online, at a local store, or harvested from the fruit itself.
+- **growthConditions**: A friendly description of the best conditions (like sun, soil, and water) for growing this plant. Explain it like you're talking to a beginner gardener.
+- **growthProcess**: An easy-to-follow, step-by-step guide on how to grow this plant, from planting the seed to when it's ready to eat.
 
 Your goal is to make the user feel excited and confident that they can grow this themselves. Avoid technical jargon.
 
