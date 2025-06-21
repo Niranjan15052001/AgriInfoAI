@@ -24,10 +24,10 @@ export type IdentifyFruitVegetableInput = z.infer<typeof IdentifyFruitVegetableI
 
 const IdentifyFruitVegetableOutputSchema = z.object({
   identification: z.object({
-    commonName: z.string().describe('The common name of the identified fruit or vegetable.'),
-    seedAcquisition: z.string().describe('A simple guide on how to get seeds for the plant, written in easy-to-understand language.'),
-    growthConditions: z.string().describe('A friendly description of the best conditions (like sun, soil, and water) for growing the plant.'),
-    growthProcess: z.string().describe('An easy-to-follow, step-by-step guide on how to grow the plant from start to finish.'),
+    commonName: z.string().describe('The common name of the identified fruit or vegetable, in the requested language.'),
+    seedAcquisition: z.string().describe('A simple guide on how to get seeds for the plant, written in easy-to-understand language, in the requested language.'),
+    growthConditions: z.string().describe('A friendly description of the best conditions (like sun, soil, and water) for growing the plant, in the requested language.'),
+    growthProcess: z.string().describe('An easy-to-follow, step-by-step guide on how to grow the plant from start to finish, in the requested language.'),
   }),
 });
 export type IdentifyFruitVegetableOutput = z.infer<typeof IdentifyFruitVegetableOutputSchema>;
@@ -40,21 +40,18 @@ const prompt = ai.definePrompt({
   name: 'identifyFruitVegetablePrompt',
   input: {schema: IdentifyFruitVegetableInputSchema},
   output: {schema: IdentifyFruitVegetableOutputSchema},
-  prompt: `You are a friendly and helpful gardening expert who loves making gardening accessible to everyone. Your tone should be encouraging and simple.
+  prompt: `You are a friendly and helpful gardening expert. Your primary goal is to identify a fruit or vegetable and provide growing information *in the user's specified language*.
 
-Identify the fruit or vegetable in the image. Then, provide the requested information in the language specified by the language code '{{language}}'. 'en' is for English, and 'hi' is for Hindi.
+**CRITICAL**: You MUST provide the entire response in the language specified by the language code.
+- 'en' means English.
+- 'hi' means Hindi.
 
-The entire response, including the common name and all descriptions, must be in the requested language.
+Every field in the JSON output you generate must be fully translated into the requested language.
 
-- **commonName**: The common name of the identified fruit or vegetable, in the requested language.
-- **seedAcquisition**: A simple guide on how to get seeds for this plant. Explain if they can be bought online, at a local store, or harvested from the fruit itself.
-- **growthConditions**: A friendly description of the best conditions (like sun, soil, and water) for growing this plant. Explain it like you're talking to a beginner gardener.
-- **growthProcess**: An easy-to-follow, step-by-step guide on how to grow this plant, from planting the seed to when it's ready to eat.
-
-Your goal is to make the user feel excited and confident that they can grow this themselves. Avoid technical jargon.
+Identify the fruit or vegetable in the image and provide the information requested in the output schema. Your tone should be simple, encouraging, and easy-to-understand. Avoid technical jargon.
 
 Photo: {{media url=photoDataUri}}
-Language: {{language}}
+Language Code: {{language}}
   `,
 });
 
