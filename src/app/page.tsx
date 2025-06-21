@@ -201,7 +201,7 @@ const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; 
                     <AccordionTrigger className="px-6 text-lg hover:no-underline font-headline">
                         <div className="flex items-center gap-3">
                             <Circle className="w-6 h-6 text-accent" />
-                            <span>Seed Acquisition</span>
+                            <span>How to Get Seeds</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-6 text-base text-muted-foreground">
@@ -212,7 +212,7 @@ const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; 
                     <AccordionTrigger className="px-6 text-lg hover:no-underline font-headline">
                         <div className="flex items-center gap-3">
                             <Sprout className="w-6 h-6 text-accent" />
-                            <span>Optimal Growth Conditions</span>
+                            <span>Best Growing Conditions</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-6 text-base text-muted-foreground">
@@ -223,7 +223,7 @@ const ResultsDisplay = ({ result, previewUrl }: { result: IdentificationResult; 
                     <AccordionTrigger className="px-6 text-lg hover:no-underline font-headline">
                         <div className="flex items-center gap-3">
                             <Leaf className="w-6 h-6 text-accent" />
-                            <span>Step-by-step Growth Process</span>
+                            <span>How to Grow: Step-by-Step</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-6 text-base text-muted-foreground">

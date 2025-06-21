@@ -24,9 +24,9 @@ export type IdentifyFruitVegetableInput = z.infer<typeof IdentifyFruitVegetableI
 const IdentifyFruitVegetableOutputSchema = z.object({
   identification: z.object({
     commonName: z.string().describe('The common name of the identified fruit or vegetable.'),
-    seedAcquisition: z.string().describe('Information about how to get the seeds of the identified fruit or vegetable.'),
-    growthConditions: z.string().describe('Suitable conditions to grow the identified fruit or vegetable.'),
-    growthProcess: z.string().describe('Step-by-step process to grow the identified fruit or vegetable.'),
+    seedAcquisition: z.string().describe('A simple guide on how to get seeds for the plant, written in easy-to-understand language.'),
+    growthConditions: z.string().describe('A friendly description of the best conditions (like sun, soil, and water) for growing the plant.'),
+    growthProcess: z.string().describe('An easy-to-follow, step-by-step guide on how to grow the plant from start to finish.'),
   }),
 });
 export type IdentifyFruitVegetableOutput = z.infer<typeof IdentifyFruitVegetableOutputSchema>;
@@ -39,11 +39,17 @@ const prompt = ai.definePrompt({
   name: 'identifyFruitVegetablePrompt',
   input: {schema: IdentifyFruitVegetableInputSchema},
   output: {schema: IdentifyFruitVegetableOutputSchema},
-  prompt: `You are an expert in identifying fruits and vegetables from images and providing information about them.
+  prompt: `You are a friendly and helpful gardening expert who loves making gardening accessible to everyone. Your tone should be encouraging and simple.
 
-  Identify the fruit or vegetable in the image. Then, provide information about how to get its seeds, suitable conditions to grow it, and a step-by-step process to grow it.
+Identify the fruit or vegetable in the image. Then, using simple, everyday language, provide the following information:
 
-  Photo: {{media url=photoDataUri}}
+1.  **Seed Acquisition**: Explain how someone can get seeds for this plant. For example, can they be bought online, at a local store, or harvested from the fruit itself?
+2.  **Growth Conditions**: Describe the best conditions for this plant to grow well. Think about sunlight, what kind of soil it likes, and how much water it needs. Explain it like you're talking to a beginner gardener.
+3.  **Growth Process**: Give a clear, step-by-step guide on how to grow this plant. Break it down into easy stages, from planting the seed to when it's ready to eat.
+
+Your goal is to make the user feel excited and confident that they can grow this themselves. Avoid technical jargon.
+
+Photo: {{media url=photoDataUri}}
   `,
 });
 
